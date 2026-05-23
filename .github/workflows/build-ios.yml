@@ -1,0 +1,68 @@
+name: Build iOS App (Simulator & Native Build)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build iOS Simulator App
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Set up CocoaPods Cache
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Run Expo Prebuild (Generate Native iOS Project)
+        run: npx expo prebuild --platform ios --no-install
+
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install
+
+      - name: Build iOS App for Simulator (Xcode)
+        run: |
+          xcodebuild \
+            -workspace ios/alany-mobile.xcworkspace \
+            -scheme alany-mobile \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build \
+            build
+
+      - name: Compress App Bundle
+        run: |
+          cd build/Build/Products/Debug-iphonesimulator
+          zip -r alany-simulator.app.zip alany-mobile.app
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alany-ios-simulator-build
+          path: build/Build/Products/Debug-iphonesimulator/alany-simulator.app.zip
+          retention-days: 7

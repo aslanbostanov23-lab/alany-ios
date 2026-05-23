@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "Alany",
+    "slug": "alany-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#020202"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ru.alany.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "Alany требует доступ к камере для съёмки фото и записи круглых видео-заметок.",
+        "NSMicrophoneUsageDescription": "Alany требует доступ к микрофону для записи голосовых сообщений и круглых видео-заметок.",
+        "NSPhotoLibraryUsageDescription": "Alany требует доступ к галерее для выбора фотографий и видео для публикации.",
+        "NSPhotoLibraryAddUsageDescription": "Alany требует доступ для сохранения скачанных медиафайлов в галерею."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#020202"
+      },
+      "package": "ru.alany.app"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0d880941-8f43-497a-98b1-39e6556ae6e4"
+      }
+    }
+  }
+}
