@@ -66,3 +66,29 @@ jobs:
           name: alany-ios-simulator-build
           path: build/Build/Products/Debug-iphonesimulator/alany-simulator.app.zip
           retention-days: 7
+
+      - name: Build Unsigned iOS App for Real Device (Xcode)
+        run: |
+          xcodebuild \
+            -workspace ios/Alany.xcworkspace \
+            -scheme Alany \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build-device \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            clean build
+
+      - name: Package Unsigned IPA (Payload)
+        run: |
+          mkdir -p build-device/Payload
+          cp -r build-device/Build/Products/Release-iphoneos/Alany.app build-device/Payload/
+          cd build-device
+          zip -r Alany.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: alany-ios-real-device-ipa
+          path: build-device/Alany.ipa
+          retention-days: 7
